@@ -51,26 +51,33 @@ Then, the KVM driver:  https://github.com/dhiltgen/docker-machine-kvm/releases
 
 ### Install Google Cloud SDK and kubectl
 
-To install kubectl easily, let install Google Cloud SDK.
+As Minikube create a Kubernetes cluster, we'll install the k8s CLI : "[kubectl](https://kubernetes.io/docs/user-guide/kubectl-overview/)". The easiest way for that is to use Google Cloud SDK.
 
 ### Install the Google Cloud SDK
-https://cloud.google.com/sdk/
 
-The installation of the Google Cloud SDK via the package manager doesn't work with my Ubuntu distribution,
-so to install, it's simpler (for experimentations) to use curl|bash from the web  :
+The installation of the Google Cloud SDK via the package manager doesn't work with my Ubuntu distribution.
+So to install it, the quicker way was (for experimentations) to use curl|bash from the web  :
 ```
     sudo apt-get update
     sudo apt-get remove google-cloud-sdk
     curl -sSL https://sdk.cloud.google.com | bash -
     exec -l $SHELL
     gcloud init
-    gcloud components list
 ```
+kubectl is not installed by default as you can see:
+```
+gcloud components list
+```
+More on the Google Cloud SDK : https://cloud.google.com/sdk/
 
 #### Installing kubectl
-Install kubectl with the gcloud CLI.
+
+Install kubectl with the gcloud CLI and the components command :
 ```
 gcloud components install kubectl
+```
+Check that kubectl is available now:
+```
 gcloud components list
 ```
 
@@ -82,4 +89,9 @@ Install Minikube according to the instructions for the latest release:
 ```
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.19.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
 ```
-To test it's installed, you can try : ``` minikube status```
+To test it's installed, you can try :
+```
+minikube status
+```
+
+Get back to the [README](./README.md)
