@@ -6,7 +6,7 @@ You can find here a summary of a test to run a Kubernetes cluster using the mini
 ## K8s And Minikube WTF??
 
 ### Kubernetes
-K8s is an abreviation for Kubernetes, the famous containers orchestration engine from Google. This tool is
+K8s is an abreviation for Kubernetes, the famous containers orchestration engine from Google. This tool is an open-source one and one of the most advanced tools to orchestrate containers.
 https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
 
 ### Minikube
@@ -23,7 +23,7 @@ Keys objectives of this little test:
 To install Minikube and pre-requisites, check this note (Ubuntu 16.04) :
 [minikube-install-note](./minikube-install-note.md)
 
-## Let's get it rollin'
+## Step 1 - Let's get it rollin'
 
 ### First minikube start
 
@@ -340,7 +340,7 @@ and launch th script from the directory were are your yaml files and options :
 ```
 You can now complete your descriptor files and test locally those changes.
 
-## TODO
+## Step 2 : still to be completed
 Those example only build a jenkins-master pod, we could now define "slave" pods that could share the work.
 
 ## References
