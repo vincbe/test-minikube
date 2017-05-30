@@ -1,5 +1,7 @@
 
-# Minikube: A mini K8s in my laptop
+# Minikube: K8s in my laptop
+
+You can find here a summary of a test to run a Kubernetes cluster using the minikube tool to
 
 ## K8s And Minikube WTF??
 
@@ -16,88 +18,23 @@ Keys objectives of this little test:
  * step 1: run a jenkins master in Minikube
  * step 2: [TO BE COMPLETED] runs jenkins slaves nodes managed by the master.
 
-## Installation and prerequisites
+## Minikube Installation and prerequisites
 
-I'm running this test on my brand new Dell XPS 13 laptop freshly installed with Ubuntu 16.04.
-To achiveve it you'll need:
- * a supported hypervisor to run your minikube VM. For linux you can choose between VirtualBox or KVM (VT-x/AMD-v virtualization must be enabled in BIOS)
- * kubectl : a command line tool to manage a Kubernetes cluster. The easiest way to get it is to install it with Google Cloud SDK.
- * minikube : the command line exec that will manage your mononode K8s.
+To install Minikube and pre-requisites, check this note (Ubuntu 16.04) :
+[minikube-install-note](./minikube-install-note.md)
 
-### Install VirtualBox as hypervisor
+## Let's get it rollin'
 
-I had a few problems to solve because of the UEFI Secure boot of my XPS 13 Laptop that I first didn't deactivate.
-So the easiest way is clearly to deactivate it. But I also present the way to keep it on and make VBox works.
+### First minikube start
 
-To install VirtualBox on Ubuntu, don't use the .deb installation from the VBox site but the one from system packaged with dkms:
-virtualbox-dkms
-and you'll also need to install : linux-headers-generic
-
-Basically after you install those two packages you also need to do the reconfiguration:
+Now that minikube is installed with its dependencies, let's start it.
 ```
-sudo dpkg-reconfigure virtualbox-dkms
-sudo dpkg-reconfigure virtualbox
-sudo modprobe vboxdrv
+minikube start
 ```
-And to fix the network interface :```
-sudo modprobe vboxnetflt```
-
-#### To keep UEFI Secure Boot on
-If you keep UEFI Secure Boot on, you can't use the unsigned vbox modules drivers. So you'll have to sign and you'll have to do of course each time you'll update them.
-Here is a link describing a solutions to sign modules to each kernel/module updates.:
-https://stegard.net/2016/10/virtualbox-secure-boot-ubuntu-fail/
-
-
-### The KVM alternative
-To go with KVm instead of VirtualBox you'll need the Docker Machine driver for KVM:
-So first install docker-machine by heading over to https://github.com/docker/machine/releases
-```
-curl -L https://github.com/docker/machine/releases/download/v0.11.0/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine && chmod +x /tmp/docker-machine && sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
-```
-
-Then, the KVM driver:  https://github.com/dhiltgen/docker-machine-kvm/releases
-```
-  curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.0/docker-machine-driver-kvm-ubuntu16.04 > /usr/local/bin/docker-machine-driver-kvm \
-  chmod +x /usr/local/bin/docker-machine-driver-kvm
-```
-
-### Install Google Cloud SDK and kubectl
-
-To install kubectl easily, let install Google Cloud SDK.
-
-### Install the Google Cloud SDK
-https://cloud.google.com/sdk/
-
-The installation of the Google Cloud SDK via the package manager doesn't work with my Ubuntu distribution,
-so to install, it's simpler (for experimentations) to use curl|bash from the web  :
-```
-    sudo apt-get update
-    sudo apt-get remove google-cloud-sdk
-    curl -sSL https://sdk.cloud.google.com | bash -
-    exec -l $SHELL
-    gcloud init
-    gcloud components list
-```
-
-#### Installing kubectl
-Install kubectl with the gcloud CLI.
-```
-gcloud components install kubectl
-gcloud components list
-```
-
-### Finally Install Minikube
-
-Quick presentation: https://github.com/kubernetes/minikube
-
-Install Minikube according to the instructions for the latest release:
-```
-curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.19.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
-```
-To test it's OK, you can try : ``` minikube status```
+This will create a VM hosting your local K8s cluster.
 
 #### Setting the use of the KVM driver
-By default, minikube will use VirtualBox, use of the KVM driver you can start your minikube each time with :
+By default, minikube will use VirtualBox to run its VM. To use of the KVM driver you can start your minikube each time with :
 ```
 minikube start --vm-driver kvm
 ```
@@ -105,10 +42,48 @@ or set it as a persistent configuration :
 ```
 minikube config set vm-driver kvm
 ```
-(To be applied, we'll need : minikube delete before a start)
+(To be applied, we'll need : minikube delete before to start if you ever created a minikube)
+
+#### Let's explore a bit minikube
+
+To check your minikube status, just ask :```minikube status```
+
+You can discover the minikube VM IP with :```minikube ip```
+
+One of the default services that are started is a Dashboard UI to manage your local cluster.
+This interface is great to see easily what is running and eventually to create or modify configurations.
+
+The next command will start the dashboard and open the default browser to its URL : ```minikube dashboard```
+
+This is a k8s service like another, so it's available via a dedicated port on the VM IP.
+  My local URL with VBox: http://192.168.99.100:30000/#!/workload?namespace=default
+  and with KVM : http://192.168.42.147:30000/#!/workload?namespace=default
+
+### Kubectl
+When starting Minikube will also configure your environment so you can use kubectl to manage your "cluster".
+
+Here are a few commands with kubectl:
+
+To get cluster status and URL : ```kubectl cluster-info```
+
+Get nodes list : ```kubectl get nodes```
+
+Create a namespace : ```kubectl create namespace jenkins```
+
+### Minikube persistent volumes
+
+The Minikube VM boots into a tmpfs, so most directories will not be persisted across reboots (minikube stop). However, Minikube is configured to persist files stored under the following directories in the minikube VM:
+ * /data
+ * /var/lib/localkube
+ * /var/lib/docker
+ * /tmp/hostpath_pv
+ * /tmp/hostpath-provisioner
+
+For more details about Persistent volumes : https://github.com/kubernetes/minikube/blob/master/docs/persistent_volumes.md
+Here are descriptors examples to create PV and claim : https://myjavabytes.wordpress.com/2017/03/12/getting-a-host-path-persistent-volume-to-work-in-minikube-kubernetes-run-locally/
 
 
-## Let's get it rollin'
+
 
 
 
