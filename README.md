@@ -163,7 +163,8 @@ As we see this PV is accessible in Read/Write mode but only by one container at 
 
 Using minikube, the directories created on the underlying hosts are only writable by root.
 So you either need to run your process as root in a privileged container or modify the file permissions on the host to be able to write to a hostPath volume.
-That's not very acceptable and my Jenkins image will use the standard jenkins user (uid=1000) so  if I don't want to go root and privileged, I need to find a way to apply this:
+That's not very acceptable and my Jenkins image will use the standard jenkins user (uid=1000) so if I don't want to go root and privileged, I need to find a way to apply this:
+
 Connect to the minikube host :
 ```
 minikube ssh
@@ -177,7 +178,7 @@ $ sudo chown root:1000 /data/pv-jenkins/
 
 #### Then a PV claim : jenkins-pv-claim.yaml
 
-To keep it simple, we'll make a claim that we'll precise the volumeName taht match the created PV.
+To keep it simple, we'll make a claim that we'll precise the volumeName that match the created PV.
 ```
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -271,9 +272,10 @@ kind: Service
 ```
 ### Deploy our pods and services
 
-#### First create our secret
+#### Create the secret
 
 We define a secret that we'll be consumed by Jenkins as and environment variable for the container.
+
 To create the secret, we can set the value in a file (here <i>options</option>) and use kubectl.
 ```
 kubectl create secret generic jenkins --from-file=./options
@@ -287,7 +289,7 @@ If we want to create all elements in our YAML descriptor files, we can just use 
 ```
 The creation is quite quick but you'll probably have to wait a more for your containers to be created and started.
 
-We can check what has bee created in the dashboard or lists resources with the CLI:
+We can check what has been created in the dashboard or lists resources with the CLI:
  * kubectl get - list resources
  * kubectl describe - show detailed information about a resource
  * kubectl logs - print the logs from a container in a pod
@@ -298,7 +300,7 @@ We can check what has bee created in the dashboard or lists resources with the C
  kubectl get svc
  kubectl get pods
  ```
-#### Accessing our Jenkins UI
+#### Accessing the Jenkins UI
 
 To determine the port to access to your Jenkins UI :
 ```
@@ -331,7 +333,8 @@ You'll find a little script that should create everything and let you play.
 
 The script start minikube, create the secret and our services+pods.
 To start from a clean state, you can delete your minikube using ```minikube delete``` (as  the VM is also deleted, you'll lost your persistant storage is they are not mounted on your VBox host)
-and launch th script from the directory were are your yaml files and options.:
+
+and launch th script from the directory were are your yaml files and options :
 ```
 ./create_minikube_jenkins.sh
 ```
@@ -342,5 +345,5 @@ Those example only build a jenkins-master pod, we could now define "slave" pods 
 
 ## References
 
-https://kubernetes.io/docs/getting-started-guides/minikube/
-https://cloud.google.com/solutions/jenkins-on-container-engine
+* https://kubernetes.io/docs/getting-started-guides/minikube/
+* https://cloud.google.com/solutions/jenkins-on-container-engine
