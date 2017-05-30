@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-jenkins
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  hostPath:
+    path: /data/pv-jenkins/
+# the directories created on the underlying hosts are only writable by root.
+# You either need to run your process as root in a privileged container or modify the file permissions on the host to be able to write to a hostPath volume
+# Not very acceptable .. if I don't want to go root and privileged, I need to find a way to apply this:
+# On the host : (mannually : minikube ssh)
+# $ sudo chmod +gW /data/pv-jenkins/
+# $ sudo chown root:1000 /data/pv-jenkins/
+
+# Other test with real host mounted to the minikube node (that is finnakly docker host)
+# More info: https://github.com/kubernetes/minikube/blob/master/docs/host_folder_mount.md
+    #path: /persistent-data/pv-jenkins/
