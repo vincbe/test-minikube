@@ -1,7 +1,9 @@
 
 # Minikube: K8s in my laptop
 
-You can find here a summary of a test to run a Kubernetes cluster using the minikube tool to
+You'll find here a summary to run a Kubernetes cluster using the minikube tool on your laptop. The application used is Jenkins but could be any application packaged in a Docker image (or even another container image as rkt).
+
+This little example is still "in progress" and should be updated but that it can yet allow you to launch your first services in minikube as a local k8s cluster.
 
 ## K8s And Minikube WTF??
 
