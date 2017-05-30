@@ -34,19 +34,19 @@ virtualbox-dkms
 and you'll also need to install : linux-headers-generic
 
 Basically after you install those two packages you also need to do the reconfiguration:
-'''
+```
 sudo dpkg-reconfigure virtualbox-dkms
 sudo dpkg-reconfigure virtualbox
 sudo modprobe vboxdrv
-'''
+
+```
 And to fix the network interface :
-'''sudo modprobe vboxnetflt'''
+```sudo modprobe vboxnetflt```
 
 #### To keep UEFI Secure Boot on
 If you keep UEFI Secure Boot on, you can't use the unsigned vbox modules drivers. So you'll have to sign and you'll have to do of course each time you'll update them.
 Here is a link describing a solutions to sign modules to each kernel/module updates.:
 https://stegard.net/2016/10/virtualbox-secure-boot-ubuntu-fail/
-
 
 
 ## Let's get it rollin'
