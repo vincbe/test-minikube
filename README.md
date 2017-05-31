@@ -200,7 +200,7 @@ spec:
 To define our pods , we'll declare what we want to deploy (kind:Deployment).
 As our master will be unique, we want only one replica and we set the image we want to use to create the container from.
 We also declare ports that the container will expose.
-K8s will also set an env.var from a secret we'll have to create soon.
+K8s will also set some environment variables from secrets we'll have to create soon in our cluster.
 We can see that we use the PV claim to mount our data volume.
 
 ```
@@ -222,11 +222,16 @@ spec:
         - containerPort: 8080
         - containerPort: 50000
         env:
+        - name: JENKINS_PASS
+          valueFrom:
+            secretKeyRef:
+              name: jenkins
+              key: jenkins_pass
         - name: JENKINS_OPTS
           valueFrom:
             secretKeyRef:
               name: jenkins
-              key: options
+              key: jenkins_options
         volumeMounts:
         - name: jenkins-home
           mountPath: /var/jenkins_home
@@ -278,9 +283,9 @@ kind: Service
 
 We define a secret that we'll be consumed by Jenkins as and environment variable for the container.
 
-To create the secret, we can set the value in a file (here <i>options</option>) and use kubectl.
+To create the secret with kubectl, we can create a file for each keys we need, the value will be set with the content of the file (be careful, if your last line is finished with a "\n", you can use echo -n to create the file).
 ```
-kubectl create secret generic jenkins --from-file=./options
+kubectl create secret generic jenkins --from-file=./secrets
 ```
 
 #### Creation of the deployment and services from my yaml files directory

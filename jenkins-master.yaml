@@ -30,11 +30,7 @@ spec:
 #        fsGroup: 1000
       containers:
       - name: jenkins-master
-        image: vberruchon/akn_jenkins_master:0.0.3
-          #jenkins:2.46.2
-          # last version on 18/05/2017 : 2.46.2
-          #2.7.2
-
+        image: vberruchon/akn_jenkins_master:0.0.4
         ports:
         - containerPort: 8080
         - containerPort: 50000
@@ -47,11 +43,16 @@ spec:
 #          successThreshold: 2
 #          failureThreshold: 5
         env:
+        - name: JENKINS_PASS
+          valueFrom:
+            secretKeyRef:
+              name: jenkins
+              key: jenkins_pass
         - name: JENKINS_OPTS
           valueFrom:
             secretKeyRef:
               name: jenkins
-              key: options
+              key: jenkins_options
         volumeMounts:
         - name: jenkins-home
           mountPath: /var/jenkins_home

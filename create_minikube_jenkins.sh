@@ -36,7 +36,7 @@ minikube start
 echo "Minikube VM host : $(minikube ip)"
 
 echo "Create and define rights on the persistant volume: ${PV_JENKINS_HOST_PATH}"
-minikube ssh "sudo mkdir ${PV_JENKINS_HOST_PATH} && sudo chown root:${JENKINS_GROUP_UID]} ${PV_JENKINS_HOST_PATH} && sudo chmod g+w ${PV_JENKINS_HOST_PATH}"
+minikube ssh "sudo mkdir ${PV_JENKINS_HOST_PATH} && sudo chown root:${JENKINS_GROUP_UID} ${PV_JENKINS_HOST_PATH} && sudo chmod g+w ${PV_JENKINS_HOST_PATH}"
 status=$?
 if [ $status -ne 0 ]; then
     echo "Error creating and defining rights on the perstitant volume: ${PV_JENKINS_HOST_PATH}"
@@ -47,7 +47,8 @@ minikube ssh "sudo ls -lart ${PV_JENKINS_HOST_PATH}"
 
 echo "Let's create the services (from this dir: ${K8S_YAML_DIR} ):"
 # Here we use default namespace, should probably be changer for secrets:
-kubectl create secret generic jenkins --from-file=${K8S_YAML_DIR}/options
+kubectl create secret generic jenkins --from-file="${K8S_YAML_DIR}/secrets"
+
 kubectl create -f ${K8S_YAML_DIR}
 
 echo "Done"
