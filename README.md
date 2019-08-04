@@ -8,7 +8,7 @@ This little example is still "in progress" and should be updated but that it can
 ## K8s And Minikube WTF??
 
 ### Kubernetes
-K8s is an abreviation for Kubernetes, the famous containers orchestration engine from Google. This tool is an open-source one and one of the most advanced tools to orchestrate containers.
+K8s is an abbreviation for Kubernetes, the famous containers orchestration engine from Google. This tool is an open-source one and one of the most advanced tools to orchestrate containers.
 https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
 
 ### Minikube
